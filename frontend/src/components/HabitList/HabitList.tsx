@@ -1,6 +1,6 @@
 import { useHabits, type Habit } from "../../context/HabitProvider.tsx";
 import Button from "../Button/Button.tsx";
-import { startOfWeek, endOfWeek, eachDayOfInterval, format, isFuture, isSameDay, subDays } from "date-fns";
+import { format, isFuture, isSameDay, subDays } from "date-fns";
 
 type HabitListProps = {
 	visibleDates: Date[]
