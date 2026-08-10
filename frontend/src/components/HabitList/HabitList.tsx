@@ -1,15 +1,9 @@
+import { useHabits, type Habit } from "../../context/HabitProvider.tsx";
 import Button from "../Button/Button.tsx";
 import { startOfWeek, endOfWeek, eachDayOfInterval, format, isFuture, isSameDay, subDays } from "date-fns";
 
-export type Habit = { id: string; name: string; completions: Date[]}
-
-type HabitListProps = {
-	habits: Habit[]
-	deleteHabit: (id:string) => void
-	toggleHabit: (id:string, date: Date) => void
-}
-
-export function HabitList({ habits, deleteHabit, toggleHabit }: HabitListProps){
+export function HabitList(){
+	const { habits } = useHabits()
 	if (habits.length === 0) {
     return <p className="text-center text-zinc-500 py-12">
       No habits yet. Add one above to get started!
@@ -20,8 +14,6 @@ export function HabitList({ habits, deleteHabit, toggleHabit }: HabitListProps){
 		<div className="flex flex-col gap-3">
 			{habits.map(habit => (
 				<HabitItem 
-					deleteHabit={deleteHabit} 
-					toggleHabit={toggleHabit}
 					key={habit.id} habit={habit} 
 				/>
 			))}
@@ -31,11 +23,22 @@ export function HabitList({ habits, deleteHabit, toggleHabit }: HabitListProps){
 
 type HabitItemProps = {
 	habit: Habit
-	deleteHabit: (id: string) => void
-	toggleHabit: (id:string, date: Date) => void
 }
 
-function HabitItem({ habit, deleteHabit, toggleHabit }: HabitItemProps ){
+function getStreak(completions: Date[]) {
+	let streak = 0
+	let date = new Date()
+
+	while(completions.some(c => isSameDay(c, date))) {
+		streak ++
+		date = subDays(date, 1)
+	}
+
+	return streak
+}
+
+function HabitItem({ habit }: HabitItemProps ){
+	const { deleteHabit, toggleHabit } =  useHabits()
 	const visibleDates = eachDayOfInterval({ 
 		start: startOfWeek(new Date(), { weekStartsOn: 1 }), 
 		end: endOfWeek(new Date(), { weekStartsOn: 1 }),
@@ -83,15 +86,3 @@ function HabitItem({ habit, deleteHabit, toggleHabit }: HabitItemProps ){
 }
 
 export default HabitList;
-
-function getStreak(completions: Date[]) {
-	let streak = 0
-	let date = new Date()
-
-	while(completions.some(c => isSameDay(c, date))) {
-		streak ++
-		date = subDays(date, 1)
-	}
-
-	return streak
-}
