@@ -39,6 +39,7 @@ function getStreak(completions: Date[]) {
 
 function HabitItem({ habit }: HabitItemProps ){
 	const { deleteHabit, toggleHabit } =  useHabits()
+	
 	const visibleDates = eachDayOfInterval({ 
 		start: startOfWeek(new Date(), { weekStartsOn: 1 }), 
 		end: endOfWeek(new Date(), { weekStartsOn: 1 }),
