@@ -30,12 +30,6 @@ namespace backend.Migrations
                 oldClrType: typeof(string),
                 oldType: "text");
 
-            migrationBuilder.AddColumn<string>(
-                name: "GoogleId",
-                table: "Users",
-                type: "text",
-                nullable: true);
-
             migrationBuilder.CreateTable(
                 name: "PendingRegistrations",
                 columns: table => new
@@ -58,12 +52,6 @@ namespace backend.Migrations
                 name: "IX_Users_Email",
                 table: "Users",
                 column: "Email",
-                unique: true);
-
-            migrationBuilder.CreateIndex(
-                name: "IX_Users_GoogleId",
-                table: "Users",
-                column: "GoogleId",
                 unique: true);
 
             migrationBuilder.CreateIndex(
@@ -90,15 +78,7 @@ namespace backend.Migrations
                 table: "Users");
 
             migrationBuilder.DropIndex(
-                name: "IX_Users_GoogleId",
-                table: "Users");
-
-            migrationBuilder.DropIndex(
                 name: "IX_Users_Username",
-                table: "Users");
-
-            migrationBuilder.DropColumn(
-                name: "GoogleId",
                 table: "Users");
 
             migrationBuilder.AlterColumn<string>(

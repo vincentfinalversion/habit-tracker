@@ -12,7 +12,7 @@ using backend.Data;
 namespace backend.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20260816231950_AddPendingRegistrationAndUserAuthFields")]
+    [Migration("20260819074739_AddPendingRegistrationAndUserAuthFields")]
     partial class AddPendingRegistrationAndUserAuthFields
     {
         /// <inheritdoc />
@@ -82,9 +82,6 @@ namespace backend.Migrations
                         .HasMaxLength(256)
                         .HasColumnType("character varying(256)");
 
-                    b.Property<string>("GoogleId")
-                        .HasColumnType("text");
-
                     b.Property<string>("PasswordHash")
                         .IsRequired()
                         .HasColumnType("text");
@@ -97,9 +94,6 @@ namespace backend.Migrations
                     b.HasKey("Id");
 
                     b.HasIndex("Email")
-                        .IsUnique();
-
-                    b.HasIndex("GoogleId")
                         .IsUnique();
 
                     b.HasIndex("Username")

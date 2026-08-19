@@ -25,10 +25,6 @@ public class AppDbContext : DbContext
             .HasIndex(u => u.Email)
             .IsUnique();
 
-        modelBuilder.Entity<User>()
-            .HasIndex(u => u.GoogleId)
-            .IsUnique();
-
         modelBuilder.Entity<PendingRegistration>()
             .HasIndex(p => p.Email)
             .IsUnique();

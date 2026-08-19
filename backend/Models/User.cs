@@ -13,8 +13,7 @@ public class User
     public string Email { get; set; } = null!;
 
     [Required]
-    public string PasswordHash { get; set; } = null!; 
-    public string? GoogleId { get; set; } // nullable because it will only have value when the user links google
+    public string PasswordHash { get; set; } = null!;
 
     public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
 }
