@@ -1,6 +1,39 @@
 @backend_HostAddress = http://localhost:5235
+@baseUrl = http://localhost:5235
+@contentType = application/json
 
-GET {{backend_HostAddress}}/weatherforecast/
-Accept: application/json
+### Register - initiate
+POST {{baseUrl}}/api/auth/register/initiate
+Content-Type: {{contentType}}
 
-###
+{
+  "username": "testuser",
+  "email": "test@gmail.com",
+  "password": "SuperSecret123"
+}
+
+### Register - verify (grab the code from your actual inbox after running the request above)
+POST {{baseUrl}}/api/auth/register/verify
+Content-Type: {{contentType}}
+
+{
+  "email": "test.exe@gmail.com",
+  "otpCode": "691320"
+}
+
+### Login with username/password
+POST {{baseUrl}}/api/auth/login
+Content-Type: {{contentType}}
+
+{
+  "username": "testuser",
+  "password": "Superret123"
+}
+
+### Login with Google (idToken must be a real token obtained from Google Sign-In — see note below)
+POST {{baseUrl}}/api/auth/login/google
+Content-Type: {{contentType}}
+
+{
+  "idToken": "PASTE_REAL_GOOGLE_ID_TOKEN_HERE"
+}

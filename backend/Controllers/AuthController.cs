@@ -16,19 +16,25 @@ public class AuthController : ControllerBase
     private readonly IOtpGenerator _otpGenerator;
     private readonly IPasswordHasher _passwordHasher;
     private readonly IConfiguration _config;
+    private readonly IJwtTokenService _jwtTokenService;
+    private readonly IGoogleAuthService _googleAuthService;
 
     public AuthController(
         AppDbContext db,
         IEmailService emailService,
         IOtpGenerator otpGenerator,
         IPasswordHasher passwordHasher,
-        IConfiguration config)
+        IConfiguration config,
+        IJwtTokenService jwtTokenService,
+        IGoogleAuthService googleAuthService)
     {
         _db = db;
         _emailService = emailService;
         _otpGenerator = otpGenerator;
         _passwordHasher = passwordHasher;
         _config = config;
+        _jwtTokenService = jwtTokenService;
+        _googleAuthService = googleAuthService;
     }
 
     [HttpPost("register/initiate")]
@@ -104,5 +110,48 @@ public class AuthController : ControllerBase
         await _db.SaveChangesAsync();
 
         return Ok(new { message = "Account successfully registered." });
+    }
+
+    [HttpPost("login")]
+    public async Task<IActionResult> Login(LoginRequest request)
+    {
+        var user = await _db.Users.FirstOrDefaultAsync(u => u.Username == request.Username);
+
+        if (user is null || !_passwordHasher.Verify(request.Password, user.PasswordHash))
+            return Unauthorized(new { message = "Invalid username or password." });
+
+        var (token, expiresAt) = _jwtTokenService.GenerateToken(user);
+
+        return Ok(new AuthResponse
+        {
+            Token = token,
+            Username = user.Username,
+            Email = user.Email,
+            ExpiresAt = expiresAt
+        });
+    }
+
+    [HttpPost("login/google")]
+    public async Task<IActionResult> LoginGoogle(GoogleLoginRequest request)
+    {
+        var result = await _googleAuthService.VerifyIdTokenAsync(request.IdToken);
+
+        if (result is null || !result.Value.EmailVerified)
+            return Unauthorized(new { message = "Invalid Google credentials." });
+
+        var user = await _db.Users.FirstOrDefaultAsync(u => u.Email == result.Value.Email);
+
+        if (user is null)
+            return Unauthorized(new { message = "No account is registered with this Google email." });
+
+        var (token, expiresAt) = _jwtTokenService.GenerateToken(user);
+
+        return Ok(new AuthResponse
+        {
+            Token = token,
+            Username = user.Username,
+            Email = user.Email,
+            ExpiresAt = expiresAt
+        });
     }
 }
