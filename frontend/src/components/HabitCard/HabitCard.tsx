@@ -37,20 +37,21 @@ function HabitCard({ habit }: HabitCardProps){
 
 	return (
 	<div className="card">
-		<div className="header">
+		<div className="habit-card-header">
 			<div className="habit-info">
 				<span className="habit-name">{habit.name}</span>
 				{streak !== 0 && ( // if streak is 0, returns false making the span not render
 					<span className="streak">🔥{streak}</span>				
 				)}
 			</div>
-			<Button 
-				onClick={() => deleteHabit(habit.id)} 
-				variant="ghost-destructive" 
-				className="delete-button"
-			>
-				Delete
-			</Button>
+      <div className="delete-button-container">
+        <Button 
+          onClick={() => deleteHabit(habit.id)} 
+          variant="ghost-destructive" 
+        >
+          Delete
+        </Button>
+      </div>
 		</div>
 		<div className="week-row">
 			<Button
