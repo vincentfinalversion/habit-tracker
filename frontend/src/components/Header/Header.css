@@ -1,0 +1,25 @@
+.header {
+	display: flex;	
+    flex-direction: column;
+	align-items: flex-start;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    background-color: var(--color-background);
+    padding: 0.1rem;
+    gap: 0.5rem;
+    border-bottom: 2px solid var(--color-text-border);
+}
+
+.header-title {
+    font-family: "Ubuntu", sans-serif;
+	font-size: 1.875rem;
+	line-height: 2.25rem;
+	font-weight: 900;
+}
+
+.habits-completed {
+    font-family: "Roboto", sans-serif;
+	font-size: 0.875rem;
+	line-height: 1.25rem;
+}

@@ -1,0 +1,44 @@
+.button {
+  user-select: none;
+  border: 2px solid var(--color-text-border);
+  box-shadow: -1px 1px 0 var(--color-text-border);
+  padding: 0.25rem 0.5rem;
+  transition: background-color 0.2s, color 0.2s, border-color 0.2s;
+  font-family: "Ubuntu", sans-serif;
+  font-weight: 500;
+}
+
+.button:disabled {
+  opacity: 0.3;
+  cursor: not-allowed;
+}
+
+.button--primary {
+  background-color: var(--color-primary);
+}
+
+.button--primary:hover:not(:disabled) {
+  background-color: var(--color-primary-hover);
+}
+
+.button--secondary {
+  background-color: var(--color-background);
+}
+
+.button--secondary:hover:not(:disabled) {
+  background-color: var(--color-primary-hover);
+}
+
+.button--ghost-destructive {
+  border: 2px solid transparent;   
+  box-shadow: none;
+  background: transparent;
+  color: var(--color-destructive);
+}
+
+.button--ghost-destructive:hover:not(:disabled) {
+  border-color: var(--color-text-border);
+  box-shadow: -1px 1px 0 var(--color-text-border);
+  background-color: var(--color-destructive);
+  color: var(--color-text-border);
+}
