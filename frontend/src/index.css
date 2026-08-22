@@ -11,5 +11,5 @@
 
 body {
     background-color: var(--color-background);
-    color: var(--color-secondary);
+    color: var(--color-text-border);
 }
