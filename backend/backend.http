@@ -22,12 +22,13 @@ Content-Type: {{contentType}}
 }
 
 ### Login with username/password
+# @name login
 POST {{baseUrl}}/api/auth/login
 Content-Type: {{contentType}}
 
 {
   "username": "testuser",
-  "password": "Superret123"
+  "password": "SuperSecret123"
 }
 
 ### Login with Google (idToken must be a real token obtained from Google Sign-In — see note below)
@@ -37,3 +38,55 @@ Content-Type: {{contentType}}
 {
   "idToken": "PASTE_REAL_GOOGLE_ID_TOKEN_HERE"
 }
+
+### Create a habit
+POST {{baseUrl}}/api/habits
+Content-Type: {{contentType}}
+Authorization: Bearer {{login.response.body.$.token}}
+
+{
+  "name": "Drink water"
+}
+
+### Get habits for the current week (defaults when weekStart is omitted)
+GET {{baseUrl}}/api/habits
+Authorization: Bearer {{login.response.body.$.token}}
+
+### Get habits for a specific week (Monday start)
+GET {{baseUrl}}/api/habits?weekStart=2026-08-17
+Authorization: Bearer {{login.response.body.$.token}}
+
+### Toggle completion for today (replace habitId with a real id from Create/Get above)
+POST {{baseUrl}}/api/habits/1/toggle
+Content-Type: {{contentType}}
+Authorization: Bearer {{login.response.body.$.token}}
+
+{
+  "date": "2026-08-22"
+}
+
+### Toggle completion for a past date (should succeed)
+POST {{baseUrl}}/api/habits/1/toggle
+Content-Type: {{contentType}}
+Authorization: Bearer {{login.response.body.$.token}}
+
+{
+  "date": "2026-08-19"
+}
+
+### Toggle completion for a future date (should return 400)
+POST {{baseUrl}}/api/habits/1/toggle
+Content-Type: {{contentType}}
+Authorization: Bearer {{login.response.body.$.token}}
+
+{
+  "date": "2026-08-25"
+}
+
+### Daily summary
+GET {{baseUrl}}/api/habits/summary
+Authorization: Bearer {{login.response.body.$.token}}
+
+### Delete a habit (replace habitId)
+DELETE {{baseUrl}}/api/habits/1
+Authorization: Bearer {{login.response.body.$.token}}
