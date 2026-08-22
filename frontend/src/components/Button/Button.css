@@ -1,8 +1,9 @@
 .button {
+  user-select: none;
   border: 2px solid var(--color-text-border);
   box-shadow: -1px 1px 0 var(--color-text-border);
   padding: 0.25rem 0.5rem;
-  transition: background-color 0.2s, color 0.2s;
+  transition: background-color 0.2s, color 0.2s, border-color 0.2s;
   font-family: "Ubuntu", sans-serif;
   font-weight: 500;
   color: var(--color-text-border);
@@ -37,7 +38,7 @@
 }
 
 .button--ghost-destructive:hover:not(:disabled) {
-  border: 2px solid var(--color-text-border);
+  border-color: var(--color-text-border);
   box-shadow: -1px 1px 0 var(--color-text-border);
   background-color: var(--color-destructive);
   color: var(--color-text-border);
