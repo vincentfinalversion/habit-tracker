@@ -1,28 +1,19 @@
-import Header from './components/Header/Header.tsx';
-import HabitForm from './components/HabitForm/HabitForm.tsx';
-import HabitList from './components/HabitList/HabitList.tsx';
-import HabitProvider from './context/HabitProvider.tsx';
-import { addWeeks, eachDayOfInterval, endOfWeek, startOfWeek } from 'date-fns';
-import { useState } from 'react';
+import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
+import AuthPage from "./pages/AuthPage/AuthPage.tsx";
+import EmailVerificationPage from "./pages/EmailVerificationPage/EmailVerificationPage.tsx";
+import DashboardPage from "./pages/DashboardPage/DashboardPage.tsx";
 
-export default function App(){
-  const [weekOffset, setWeekOffset] = useState(0)
+function App() {
+  return (
+    <BrowserRouter>
+      <Routes>
+        <Route path="/" element={<Navigate to="/dashboard" replace />} />
+        <Route path="/auth" element={<AuthPage />} />
+        <Route path="/verify-email" element={<EmailVerificationPage />} />
+        <Route path="/dashboard" element={<DashboardPage />} />
+      </Routes>
+    </BrowserRouter>
+  );
+};
 
-  const week = addWeeks(new Date(), weekOffset)
-
-  const visibleDates = eachDayOfInterval({ 
-    start: startOfWeek(week, { weekStartsOn: 1 }), 
-    end: endOfWeek(week, { weekStartsOn: 1 }),
-  })
-
-  return( 
-    <HabitProvider>
-      <Header />
-      <div className="app-container">
-          <HabitForm />
-          <HabitList visibleDates={visibleDates}/>
-      </div>
-    </HabitProvider >
-  )
-}
-
+export default App;
