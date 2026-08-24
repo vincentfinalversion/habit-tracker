@@ -22,5 +22,4 @@
 	outline: none;
 	border: 2px solid var(--color-primary);
 	box-shadow: -1px 1px 0 var(--color-primary);
-    font-weight: 500;
 }
