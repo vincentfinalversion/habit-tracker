@@ -50,6 +50,7 @@
 .auth-form-container{
     display: flex;
     flex-direction: column;
+    gap: 0.5rem;
 }
 
 .toggle-buttons-container{

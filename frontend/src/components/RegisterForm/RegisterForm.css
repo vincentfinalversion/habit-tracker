@@ -1,6 +1,40 @@
-.register-form{
+.register-form {
     display: flex;
     flex-direction: column;
-	gap: 0.5rem;
+    height: 100%;
+    min-height: 0;
     font-family: "Roboto", sans-serif;
+}
+
+.register-form-fields {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+
+    flex: 1;
+    min-height: 0;
+
+    overflow-y: auto;
+    padding-right: 8px;
+}
+
+.register-form-fields::-webkit-scrollbar {
+    width: 6px;
+}
+
+.register-form-fields::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+.register-form-fields::-webkit-scrollbar-thumb {
+    background: var(--color-text-border);
+}
+
+.register-form-fields::-webkit-scrollbar-thumb:hover {
+    background: var(--color-text-border);
+}
+
+.habit-form-button {
+    flex-shrink: 0;
+    margin-top: 16px;
 }

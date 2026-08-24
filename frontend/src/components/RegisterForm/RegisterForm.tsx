@@ -59,38 +59,40 @@ function RegisterForm() {
   
   return (
     <form className="register-form" onSubmit={handleSubmit}>
-      <TextField
-        placeholder="Enter your username"
-        label="Username"
-        value={username}
-        error={errors.username}
-        onChange={(e) => setUsername(e.target.value)}  
-      >
-      </TextField>
-      <TextField
-        placeholder="Enter your email"
-        label="Email"
-        value={email}
-        error={errors.email}
-        onChange={(e) => setEmail(e.target.value)}
-      >
-      </TextField>
-      <TextField
-        placeholder="Enter your password"
-        label="Password"
-        value={password}
-        error={errors.password}
-        onChange={(e) => setPassword(e.target.value)}
-      >
-      </TextField>
-      <TextField
-        placeholder="Enter your password again"
-        label="Re-enter Password"
-        value={confirmPassword}
-        error={errors.confirmPassword}
-        onChange={(e) => setConfirmPassword(e.target.value)}
-      >
-      </TextField>
+      <div className="register-form-fields">
+        <TextField
+          placeholder="Enter your username"
+          label="Username"
+          value={username}
+          error={errors.username}
+          onChange={(e) => setUsername(e.target.value)}  
+        >
+        </TextField>
+        <TextField
+          placeholder="Enter your email"
+          label="Email"
+          value={email}
+          error={errors.email}
+          onChange={(e) => setEmail(e.target.value)}
+        >
+        </TextField>
+        <TextField
+          placeholder="Enter your password"
+          label="Password"
+          value={password}
+          error={errors.password}
+          onChange={(e) => setPassword(e.target.value)}
+        >
+        </TextField>
+        <TextField
+          placeholder="Enter your password again"
+          label="Re-enter Password"
+          value={confirmPassword}
+          error={errors.confirmPassword}
+          onChange={(e) => setConfirmPassword(e.target.value)}
+        >
+        </TextField>
+      </div>
 			<Button className="habit-form-button">
 				Register Account
 			</Button>
