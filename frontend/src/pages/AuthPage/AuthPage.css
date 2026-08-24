@@ -1,8 +1,26 @@
-.auth-main{
-    width: 80%;
-    height: 80%;
-    margin: 0 auto;
+.auth-page {
+    min-height: 100vh;
     display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.auth-main {
+    display: flex;
+    width: 100%;
+    max-width: 1000px;
+    height: 80vh;
+    border: 2px solid var(--color-text-border);
+    box-shadow: -3px 3px 0 var(--color-text-border);
+    align-items: center;
+}
+
+.auth-info-container,
+.auth-form-container {
+    flex: 1;
+    min-width: 0;
+    height: 100%;
+    padding: 1rem;
 }
 
 .auth-info-container{
@@ -13,11 +31,14 @@
     font-family: "Roboto", "sans-serif";
     user-select: none;
     pointer-events: none;
+    gap: 0.5rem;
+    border-right: 2px solid var(--color-text-border);
 }
 
 .auth-info-title{
     font-weight: bolder;
 	font-size: 1.8rem;
+    line-height: 1.5rem;
 }
 
 .auth-info-description{
@@ -29,7 +50,6 @@
 .auth-form-container{
     display: flex;
     flex-direction: column;
-    flex:1;
 }
 
 .toggle-buttons-container{
@@ -43,5 +63,4 @@
 .toggle-buttons-container > button:not(.active) {
   border-color: transparent;
   box-shadow: none;
-  background-color: var(--color-background);
 }

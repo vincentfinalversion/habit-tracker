@@ -1,20 +1,21 @@
-import Header from '../../components/Header/Header.tsx';
-import Button from '../../components/Button/Button.tsx';
 import { useState } from 'react';
+import Button from '../../components/Button/Button.tsx';
+import LoginForm from '../../components/LoginForm/LoginForm.tsx';
+import RegisterForm from '../../components/RegisterForm/RegisterForm.tsx';
 import './AuthPage.css';
 
 function AuthPage() {
   const [activeTab, setActiveTab] = useState<'login' | 'register'>('login');
 
   return (
-    <div>
+    <div className="auth-page">
       <main className="auth-main">
         <div className="auth-info-container">
           <h2 className="auth-info-title">
-            Stay consistent.
+            myHabits
           </h2>
           <p className="auth-info-description">
-            Build habits that stick, one day at a time.
+            Stay consistent. Build habits that stick, one day at a time.
           </p>
         </div>
         <div className="auth-form-container">
@@ -32,6 +33,7 @@ function AuthPage() {
               Register
             </Button>
           </div>
+          {activeTab === 'login' ? <LoginForm /> : <RegisterForm />}
         </div>
       </main>
     </div>

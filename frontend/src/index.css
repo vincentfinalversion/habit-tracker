@@ -15,6 +15,7 @@
 body {
     background-color: var(--color-background);
     color: var(--color-text-border);
+    margin: 0;
 }
 
 .app-container {
