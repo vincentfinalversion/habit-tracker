@@ -1,0 +1,6 @@
+.register-form{
+    display: flex;
+    flex-direction: column;
+	gap: 0.5rem;
+    font-family: "Roboto", sans-serif;
+}
