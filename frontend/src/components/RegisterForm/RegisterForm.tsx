@@ -90,7 +90,7 @@ function RegisterForm() {
         error={errors.confirmPassword}
         onChange={(e) => setConfirmPassword(e.target.value)}
       >
-      </TextField>input validation
+      </TextField>
 			<Button className="habit-form-button">
 				Register Account
 			</Button>

@@ -23,3 +23,13 @@
 	border: 2px solid var(--color-primary);
 	box-shadow: -1px 1px 0 var(--color-primary);
 }
+
+.text-field-error {
+  color: var(--color-destructive);
+  font-weight: 400;
+  font-size: 0.7rem;
+}
+
+.text-field-error.placeholder {
+  visibility: hidden;
+}

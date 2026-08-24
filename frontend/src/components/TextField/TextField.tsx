@@ -20,11 +20,9 @@ function TextField({
         className="text-field-input"
         {...props} 
       />
-      {error && (
-        <span className="text-field-error">
-          {error}
-        </span>
-      )}
+      <span className={`text-field-error ${!error ? "placeholder" : ""}`}>
+        {error || "."}
+      </span>
     </div>
   );
 }
