@@ -1,0 +1,47 @@
+.auth-main{
+    width: 80%;
+    height: 80%;
+    margin: 0 auto;
+    display: flex;
+}
+
+.auth-info-container{
+    display: flex;
+    flex-direction: column;
+    flex:1;
+    justify-content: center;
+    font-family: "Roboto", "sans-serif";
+    user-select: none;
+    pointer-events: none;
+}
+
+.auth-info-title{
+    font-weight: bolder;
+	font-size: 1.8rem;
+}
+
+.auth-info-description{
+    font-weight: 400;
+    font-size: 1rem;
+	line-height: 1.25rem;
+}
+
+.auth-form-container{
+    display: flex;
+    flex-direction: column;
+    flex:1;
+}
+
+.toggle-buttons-container{
+    display: flex;
+}
+
+.toggle-buttons-container > button{
+    flex:1;
+}
+
+.toggle-buttons-container > button:not(.active) {
+  border-color: transparent;
+  box-shadow: none;
+  background-color: var(--color-background);
+}
