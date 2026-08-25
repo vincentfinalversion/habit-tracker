@@ -55,6 +55,7 @@
 
 .toggle-buttons-container{
     display: flex;
+    flex-shrink: 0;
 }
 
 .toggle-buttons-container > button{

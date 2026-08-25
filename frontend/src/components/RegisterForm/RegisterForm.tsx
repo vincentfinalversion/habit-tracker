@@ -93,7 +93,7 @@ function RegisterForm() {
         >
         </TextField>
       </div>
-			<Button className="habit-form-button">
+			<Button className="register-form-button">
 				Register Account
 			</Button>
     </form>

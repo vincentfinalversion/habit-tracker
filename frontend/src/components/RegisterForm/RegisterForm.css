@@ -1,7 +1,7 @@
 .register-form {
     display: flex;
     flex-direction: column;
-    height: 100%;
+    flex: 1;        
     min-height: 0;
     font-family: "Roboto", sans-serif;
 }
@@ -31,7 +31,7 @@
     background: var(--color-text-border);
 }
 
-.habit-form-button {
+.register-form-button {
     flex-shrink: 0;
     margin-top: 16px;
 }
