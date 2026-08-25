@@ -61,7 +61,6 @@ function LoginForm() {
           type="button"
           className="google-login-button"
           variant="secondary"
-          disabled={username.trim() === "" || password.trim() === ""} 
         >
           Login using google
         </Button>

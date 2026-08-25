@@ -10,9 +10,18 @@
     gap: 12px;
 }
 
-.login-form-fields {
+.login-form-buttons {
     display: flex;
     flex-direction: column;
     flex: 1;
-    padding-right: 8px;
+}
+
+.login-button,
+.google-login-button{
+    flex:1;
+}
+
+.login-form-buttons h4 {
+    align-self: center;
+    margin: 0;
 }
