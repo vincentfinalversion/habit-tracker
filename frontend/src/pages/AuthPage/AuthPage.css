@@ -65,3 +65,9 @@
   border-color: transparent;
   box-shadow: none;
 }
+
+@media (max-width: 768px) {
+  .auth-info-container {
+    display: none;
+  }
+}
