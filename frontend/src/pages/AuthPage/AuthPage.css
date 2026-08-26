@@ -41,6 +41,12 @@
     gap: 1rem;
 }
 
+.auth-form-container > .login-form,
+.auth-form-container > .register-form {
+    animation: auth-mode-enter 200ms ease-in;
+    transform-origin: top center;
+}
+
 .toggle-buttons-container{
     display: flex;
 }
@@ -52,6 +58,25 @@
 .toggle-buttons-container > button:not(.active) {
     border-color: transparent;
     box-shadow: none;
+}
+
+@keyframes auth-mode-enter {
+    from {
+        opacity: 0;
+        transform: translateX(15px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .auth-form-container > .login-form,
+    .auth-form-container > .register-form {
+        animation: none;
+    }
 }
 
 @media (max-width: 768px) {
