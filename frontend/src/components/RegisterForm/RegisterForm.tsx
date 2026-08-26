@@ -93,9 +93,11 @@ function RegisterForm() {
         >
         </TextField>
       </div>
-			<Button className="register-form-button">
-				Register Account
-			</Button>
+      <div className="register-form-buttons">
+        <Button className="register-form-button">
+          Register Account
+        </Button>
+      </div>
     </form>
   );
 }

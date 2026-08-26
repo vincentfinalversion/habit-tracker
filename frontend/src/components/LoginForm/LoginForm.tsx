@@ -52,7 +52,6 @@ function LoginForm() {
         <Button
           type="submit"
           className="login-button" 
-          disabled={username.trim() === "" || password.trim() === ""}
         >
           Login
         </Button>
