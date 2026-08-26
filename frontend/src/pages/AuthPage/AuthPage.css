@@ -49,13 +49,39 @@
 
 .toggle-buttons-container{
     display: flex;
+    position: relative;
+}
+
+.toggle-buttons-container::before {
+    content: "";
+    position: absolute;
+    inset: 0 auto 0 0;
+    width: 50%;
+    border: 2px solid var(--color-text-border);
+    box-shadow: -2px 2px 0 var(--color-text-border);
+    pointer-events: none;
+    z-index: 1;
+    transform: translateX(0);
+    transition:
+        transform 200ms ease,
+        box-shadow 0s linear 200ms;
+}
+
+.toggle-buttons-container:has(> button.active:last-child)::before {
+    transform: translateX(100%);
 }
 
 .toggle-buttons-container > button{
     flex:1;
+    position: relative;
 }
 
 .toggle-buttons-container > button:not(.active) {
+    border-color: transparent;
+    box-shadow: none;
+}
+
+.toggle-buttons-container > button.active {
     border-color: transparent;
     box-shadow: none;
 }
@@ -76,6 +102,10 @@
     .auth-form-container > .login-form,
     .auth-form-container > .register-form {
         animation: none;
+    }
+
+    .toggle-buttons-container::before {
+        transition: none;
     }
 }
 
