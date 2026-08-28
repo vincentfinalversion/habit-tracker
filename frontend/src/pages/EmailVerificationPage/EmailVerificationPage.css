@@ -1,0 +1,8 @@
+.email-verification-page{
+    border: 3px solid var(--color-text-border);
+    box-shadow: -3px 3px 0 var(--color-text-border);
+    display: flex; 
+    width: calc(100vw - 50rem);
+    height: 40%;
+    box-sizing: border-box;
+}
