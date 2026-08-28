@@ -1,27 +1,34 @@
 import { useState, type SubmitEvent } from "react";
+import { useNavigate } from "react-router-dom";
 import TextField from "../TextField/TextField";
 import Button from "../Button/Button";
+import { login } from "../../api/authApi";
 import "./LoginForm.css";
 
 function LoginForm() {
 	const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
+  const [error, setError] = useState("");
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const navigate = useNavigate();
 
-	function handleSubmit(e: SubmitEvent) {
+	async function handleSubmit(e: SubmitEvent) {
   e.preventDefault();
 
   if (username.trim() === "" || password.trim() === "") return;
 
-  console.log("Login attempt:", {
-    username,
-    password,
-  });
+  setError("");
+  setIsSubmitting(true);
 
-  // TODO:
-  // await login(username, password);
-
-  setUsername("");
-  setPassword("");
+  try {
+    const auth = await login(username, password);
+    localStorage.setItem("authToken", auth.token);
+    navigate("/dashboard");
+  } catch (err) {
+    setError(err instanceof Error ? err.message : "Something went wrong. Please try again.");
+  } finally {
+    setIsSubmitting(false);
+  }
 	}
 
   function handleGoogleLogin() {
@@ -43,17 +50,20 @@ function LoginForm() {
         <TextField
           placeholder="Enter your password"
           label="Password"
+          type="password"
           value={password}
           onChange={(e) => setPassword(e.target.value)}
+          error={error}
         >
         </TextField>
       </div>
       <div className="login-form-buttons">
         <Button
           type="submit"
-          className="login-button" 
+          className="login-button"
+          disabled={isSubmitting}
         >
-          Login
+          {isSubmitting ? "Logging in..." : "Login"}
         </Button>
         <h4>OR</h4>
         <Button 
