@@ -1,10 +1,25 @@
 .single-field-form {
 	display: flex;
+	align-items: flex-start; 
 	gap: 0.5rem;
     font-family: "Roboto", sans-serif;
 }
 
+.single-field-form .text-field-input,
+.single-field-form-button {
+    box-sizing: border-box;
+    height: 2.5rem;
+}
+
 .button-container {
     display: flex;
-    flex: 1;
+    flex-direction: column;
+    flex: 0 0 auto;
+}
+
+.button-container-label-spacer {
+    visibility: hidden;
+    width: 0;
+    overflow: hidden;
+    white-space: nowrap;
 }

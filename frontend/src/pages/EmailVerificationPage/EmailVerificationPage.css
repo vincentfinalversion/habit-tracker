@@ -1,8 +1,12 @@
-.email-verification-page{
+.email-verification-page {
     border: 3px solid var(--color-text-border);
     box-shadow: -3px 3px 0 var(--color-text-border);
-    display: flex; 
-    width: calc(100vw - 50rem);
-    height: 40%;
+    display: flex;
+    width: 100%;
+    max-width: 30rem;
+    margin: 0 auto;
+    padding: 2rem 1.5rem;
     box-sizing: border-box;
+    align-items: center;
+    justify-content: center;
 }

@@ -28,6 +28,14 @@ function SingleFieldForm({
         {...inputProps}
       />
       <div className="button-container">
+        {label && (
+          <label
+            className="text-field-label button-container-label-spacer"
+            aria-hidden="true"
+          >
+            {label}
+          </label>
+        )}
         <Button
           disabled={buttonDisabled}
           className="single-field-form-button"

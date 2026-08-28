@@ -16,7 +16,7 @@ function EmailVerificationPage() {
   return (
     <div className="email-verification-page">
       <SingleFieldForm
-        // label={`6 digit code sent to ${email}`}
+        label={`6 digit code sent to ${email}`}
         placeholder="Enter the code"
         type="text"
         inputMode="numeric"
