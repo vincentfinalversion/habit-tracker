@@ -1,5 +1,4 @@
 import Header from '../../components/Header/Header.tsx';
-import HabitForm from '../../components/HabitForm/HabitForm.tsx';
 import HabitList from '../../components/HabitList/HabitList.tsx';
 import HabitProvider from '../../context/HabitProvider.tsx';
 import { addWeeks, eachDayOfInterval, endOfWeek, startOfWeek } from 'date-fns';
