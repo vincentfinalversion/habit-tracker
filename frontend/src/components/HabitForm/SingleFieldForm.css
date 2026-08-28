@@ -1,0 +1,10 @@
+.single-field-form {
+	display: flex;
+	gap: 0.5rem;
+    font-family: "Roboto", sans-serif;
+}
+
+.button-container {
+    display: flex;
+    flex: 1;
+}
