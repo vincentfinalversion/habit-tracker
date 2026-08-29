@@ -1,17 +1,51 @@
-import { type SubmitEvent } from 'react';
+import { useEffect, useState, type SubmitEvent } from 'react';
+import { useLocation, useNavigate } from 'react-router-dom';
 import SingleFieldForm from '../../components/HabitForm/SingleFieldForm';
+import { verifyEmail } from '../../api/registerApi';
 import './EmailVerificationPage.css';
 
-function EmailVerificationPage() {
-  const email = 'example@email.com';
+type LocationState = {
+  email?: string;
+};
 
-  const handleSubmit = (
+function EmailVerificationPage() {
+  const location = useLocation();
+  const navigate = useNavigate();
+  const email = (location.state as LocationState | null)?.email;
+
+  const [otpCode, setOtpCode] = useState('');
+  const [error, setError] = useState('');
+  const [isSubmitting, setIsSubmitting] = useState(false);
+
+  useEffect(() => {
+    if (!email) {
+      navigate('/auth', { replace: true });
+    }
+  }, [email, navigate]);
+
+  const handleSubmit = async (
     e: SubmitEvent<HTMLFormElement | HTMLInputElement>,
   ) => {
     e.preventDefault();
-    
-    // TODO: Verify the code
+
+    if (!email || otpCode.trim().length !== 6) return;
+
+    setError('');
+    setIsSubmitting(true);
+
+    try {
+      await verifyEmail(email, otpCode.trim());
+      navigate('/auth', { replace: true });
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'Something went wrong. Please try again.');
+    } finally {
+      setIsSubmitting(false);
+    }
   };
+
+  if (!email) {
+    return null;
+  }
 
   return (
     <div className="email-verification-page">
@@ -22,7 +56,11 @@ function EmailVerificationPage() {
         inputMode="numeric"
         maxLength={6}
         required
-        buttonText="Verify"
+        value={otpCode}
+        onChange={(e) => setOtpCode(e.target.value)}
+        error={error}
+        buttonText={isSubmitting ? 'Verifying...' : 'Verify'}
+        buttonDisabled={isSubmitting}
         onSubmit={handleSubmit}
       />
     </div>

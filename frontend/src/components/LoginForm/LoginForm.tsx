@@ -28,22 +28,22 @@ function LoginForm() {
   const navigate = useNavigate();
 
 	async function handleSubmit(e: SubmitEvent) {
-  e.preventDefault();
+    e.preventDefault();
 
-  if (username.trim() === "" || password.trim() === "") return;
+    if (username.trim() === "" || password.trim() === "") return;
 
-  setError("");
-  setIsSubmitting(true);
+    setError("");
+    setIsSubmitting(true);
 
-  try {
-    const auth = await login(username, password);
-    localStorage.setItem("authToken", auth.token);
-    navigate("/dashboard");
-  } catch (err) {
-    setError(err instanceof Error ? err.message : "Something went wrong. Please try again.");
-  } finally {
-    setIsSubmitting(false);
-  }
+    try {
+      const auth = await login(username, password);
+      localStorage.setItem("authToken", auth.token);
+      navigate("/dashboard");
+    } catch (err) {
+      setError(err instanceof Error ? err.message : "Something went wrong. Please try again.");
+    } finally {
+      setIsSubmitting(false);
+    }
 	}
 
   const hiddenGoogleButtonRef = useRef<HTMLDivElement>(null);

@@ -1,6 +1,8 @@
 import { useState, type SubmitEvent } from "react";
+import { useNavigate } from "react-router-dom";
 import TextField from "../TextField/TextField";
 import Button from "../Button/Button";
+import { register } from "../../api/registerApi";
 import "./RegisterForm.css";
 
 type FormErrors = {
@@ -10,6 +12,8 @@ type FormErrors = {
 	confirmPassword?: string;
 };
 
+const USERNAME_PATTERN = /^[a-zA-Z0-9_-]+$/;
+
 function RegisterForm() {
 	const [username, setUsername] = useState("");
   const [email, setEmail] = useState("");
@@ -17,18 +21,28 @@ function RegisterForm() {
 	const [confirmPassword, setConfirmPassword] = useState("");
 
   const [errors, setErrors] = useState<FormErrors>({});
-	function handleSubmit(e: SubmitEvent) {
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const navigate = useNavigate();
+
+	async function handleSubmit(e: SubmitEvent) {
 		e.preventDefault();
+
+		const trimmedUsername = username.trim();
+		const trimmedEmail = email.trim();
 
 		const newErrors: FormErrors = {};
 
-		if (username.trim() === "") {
+		if (trimmedUsername === "") {
 			newErrors.username = "Username is required";
+		} else if (trimmedUsername.length > 50) {
+			newErrors.username = "Username must be 50 characters or fewer";
+		} else if (!USERNAME_PATTERN.test(trimmedUsername)) {
+			newErrors.username = "Username can only contain letters, numbers, underscores, and dashes";
 		}
 
-		if (email.trim() === "") {
+		if (trimmedEmail === "") {
 			newErrors.email = "Email is required";
-		} else if (!/^[^\s@]+@gmail\.com$/.test(email)) {
+		} else if (!/^[^\s@]+@gmail\.com$/i.test(trimmedEmail)) {
 			newErrors.email = "Email must be a Gmail address";
 		}
 
@@ -50,11 +64,31 @@ function RegisterForm() {
 
 		if (Object.keys(newErrors).length > 0) return;
 
-		setUsername("");
-		setEmail("");
-		setPassword("");
-		setConfirmPassword("");
-		setErrors({});
+		setIsSubmitting(true);
+
+		try {
+			await register(trimmedUsername, trimmedEmail, password);
+
+			setUsername("");
+			setEmail("");
+			setPassword("");
+			setConfirmPassword("");
+			setErrors({});
+
+			navigate("/verify-email", { state: { email: trimmedEmail } });
+		} catch (err) {
+			const message = err instanceof Error ? err.message : "Something went wrong. Please try again.";
+
+			if (message.toLowerCase().includes("username")) {
+				setErrors({ username: message });
+			} else if (message.toLowerCase().includes("email")) {
+				setErrors({ email: message });
+			} else {
+				setErrors({ username: message });
+			}
+		} finally {
+			setIsSubmitting(false);
+		}
 	}
   
   return (
@@ -65,6 +99,7 @@ function RegisterForm() {
           label="Username"
           value={username}
           error={errors.username}
+          maxLength={50}
           onChange={(e) => setUsername(e.target.value)}  
         >
         </TextField>
@@ -79,6 +114,7 @@ function RegisterForm() {
         <TextField
           placeholder="Enter your password"
           label="Password"
+          type="password"
           value={password}
           error={errors.password}
           onChange={(e) => setPassword(e.target.value)}
@@ -87,6 +123,7 @@ function RegisterForm() {
         <TextField
           placeholder="Enter your password again"
           label="Re-enter Password"
+          type="password"
           value={confirmPassword}
           error={errors.confirmPassword}
           onChange={(e) => setConfirmPassword(e.target.value)}
@@ -94,8 +131,12 @@ function RegisterForm() {
         </TextField>
       </div>
       <div className="register-form-buttons">
-        <Button className="register-form-button">
-          Register Account
+        <Button
+          type="submit"
+          className="register-form-button"
+          disabled={isSubmitting}
+        >
+          {isSubmitting ? "Registering..." : "Register Account"}
         </Button>
       </div>
     </form>
