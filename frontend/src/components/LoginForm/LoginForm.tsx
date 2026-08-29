@@ -1,10 +1,25 @@
-import { useState, type SubmitEvent } from "react";
+import { useEffect, useRef, useState, type SubmitEvent } from "react";
 import { useNavigate } from "react-router-dom";
 import TextField from "../TextField/TextField";
 import Button from "../Button/Button";
-import { login } from "../../api/authApi";
+import { login, loginWithGoogle } from "../../api/authApi";
 import "./LoginForm.css";
 
+declare global {
+  interface Window {
+    google?: {
+      accounts: {
+        id: {
+          initialize: (config: {
+            client_id: string;
+            callback: (response: { credential: string }) => void;
+          }) => void;
+          renderButton: (parent: HTMLElement, options: { type: string }) => void;
+        };
+      };
+    };
+  }
+}
 function LoginForm() {
 	const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
@@ -31,12 +46,40 @@ function LoginForm() {
   }
 	}
 
-  function handleGoogleLogin() {
-    console.log("Google login clicked");
+  const hiddenGoogleButtonRef = useRef<HTMLDivElement>(null);
 
-    // TODO:
-    // google login request
+  useEffect(() => {
+    if (!window.google || !hiddenGoogleButtonRef.current) return;
+
+    window.google.accounts.id.initialize({
+      client_id: import.meta.env.VITE_GOOGLE_CLIENT_ID,
+      callback: async (response) => {
+        setError("");
+        setIsSubmitting(true);
+        try {
+          const auth = await loginWithGoogle(response.credential);
+          localStorage.setItem("authToken", auth.token);
+          navigate("/dashboard");
+        } catch (err) {
+          setError(err instanceof Error ? err.message : "Something went wrong. Please try again.");
+        } finally {
+          setIsSubmitting(false);
+        }
+      },
+    });
+
+    window.google.accounts.id.renderButton(hiddenGoogleButtonRef.current, {
+      type: "standard",
+    });
+  }, [navigate]);
+
+  function handleGoogleLogin() {
+    const hiddenButton = hiddenGoogleButtonRef.current?.querySelector<HTMLElement>(
+      "div[role=button]"
+    );
+    hiddenButton?.click();
   }
+
   return (
     <form className="login-form" onSubmit={handleSubmit}>
       <div className="login-form-fields">
@@ -70,9 +113,12 @@ function LoginForm() {
           type="button"
           className="google-login-button"
           variant="secondary"
+          onClick={handleGoogleLogin}
+          disabled={isSubmitting}
         >
           Login using google
         </Button>
+        <div ref={hiddenGoogleButtonRef} style={{ position: "absolute", opacity: 0, pointerEvents: "none" }} />
       </div>
     </form>
   );
