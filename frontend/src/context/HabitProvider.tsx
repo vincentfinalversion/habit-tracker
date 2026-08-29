@@ -1,5 +1,5 @@
 import { createContext, useContext, useEffect, useState, type ReactNode } from "react";
-import { deleteHabitRequest, getHabits, toggleHabitCompletion, type Habit } from "../api/habitsApi";
+import { createHabit as createHabitRequest, deleteHabitRequest, getHabits, toggleHabitCompletion, type Habit } from "../api/habitsApi";
 
 type Context = {
   habits: Habit[];
@@ -7,6 +7,7 @@ type Context = {
   error: string | null;
 	deleteHabit: (id: number) => Promise<void>;
 	toggleHabit: (id: number, date: string) => Promise<Habit>;
+	createHabit: (name: string) => Promise<Habit>;
 }
 
 type HabitProviderProps = {
@@ -48,8 +49,24 @@ function HabitProvider({children}: HabitProviderProps) {
     return toggleHabitCompletion(token, id, date);
   }
 
+  async function createHabit(name: string) {
+    const trimmedName = name.trim();
+
+    const isDuplicate = habits.some(
+      habit => habit.name.toLowerCase() === trimmedName.toLowerCase()
+    );
+    if (isDuplicate) throw new Error("A habit with this name already exists.");
+
+    const token = localStorage.getItem("authToken");
+    if (!token) throw new Error("You are not authenticated.");
+
+    const habit = await createHabitRequest(token, trimmedName);
+    setHabits(current => [...current, habit]);
+    return habit;
+  }
+
 	return (
-		<HabitContext value={{ habits, isLoading, error, deleteHabit, toggleHabit }}>
+		<HabitContext value={{ habits, isLoading, error, deleteHabit, toggleHabit, createHabit }}>
 			{children}
 		</HabitContext>
 	)
