@@ -41,6 +41,20 @@
 	gap: 0.375rem;
 }
 
+.week-navigation {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	gap: 0.375rem;
+	margin-bottom: 0.5rem;
+}
+
+.week-range {
+	font-size: 0.875rem;
+	font-weight: 700;
+	text-align: center;
+}
+
 .nav-button {
 	flex: 0 0 auto;
 }
@@ -62,4 +76,10 @@
 
 .day-name {
 	font-weight: 500;
+}
+
+.habit-card-error {
+	color: var(--color-destructive);
+	font-size: 0.875rem;
+	margin-top: 0.5rem;
 }

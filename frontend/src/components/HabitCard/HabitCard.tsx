@@ -1,94 +1,78 @@
-import { useState } from "react";
-import { useHabits, type Habit } from "../../context/HabitProvider.tsx";
+import { useEffect, useMemo, useState } from "react";
+import { addDays, addWeeks, format, isBefore, parseISO, startOfWeek, subWeeks } from "date-fns";
+import { getHabitWeek, type Habit } from "../../api/habitsApi";
+import { useHabits } from "../../context/HabitProvider.tsx";
 import Button from "../Button/Button.tsx";
-import { addWeeks, eachDayOfInterval, endOfWeek, format, isFuture, isSameDay, startOfWeek, subDays } from "date-fns";
 import "./HabitCard.css";
 
-function getStreak(completions: Date[]) {
-	let streak = 0
-	let date = new Date()
+const mondayOptions = { weekStartsOn: 1 as const };
+type HabitCardProps = { habit: Habit };
 
-	while(completions.some(c => isSameDay(c, date))) {
-		streak ++
-		date = subDays(date, 1)
-	}
+function HabitCard({ habit }: HabitCardProps) {
+  const { deleteHabit, toggleHabit } = useHabits();
+  const currentWeekStart = useMemo(() => startOfWeek(new Date(), mondayOptions), []);
+  const [weekStart, setWeekStart] = useState(currentWeekStart);
+  const [weekData, setWeekData] = useState(habit);
+  const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+  const createdWeekStart = startOfWeek(parseISO(weekData.createdAt), mondayOptions);
+  const canGoPrevious = isBefore(createdWeekStart, weekStart);
+  const canGoNext = isBefore(weekStart, currentWeekStart);
 
-	return streak
-}
+  useEffect(() => { setWeekData(habit); }, [habit.id]);
 
-function getVisibleDates(weekOffset: number) {
-	const anchor = addWeeks(new Date(), weekOffset)
-	return eachDayOfInterval({
-		start: startOfWeek(anchor, { weekStartsOn: 1 }),
-		end: endOfWeek(anchor, { weekStartsOn: 1 }),
-	})
-}
+  useEffect(() => {
+    const token = localStorage.getItem("authToken");
+    if (!token) return;
+    let cancelled = false;
+    setIsLoading(true);
+    setError(null);
+    void getHabitWeek(token, habit.id, format(weekStart, "yyyy-MM-dd"))
+      .then(data => { if (!cancelled) setWeekData(data); })
+      .catch(() => { if (!cancelled) setError("Unable to load this week."); })
+      .finally(() => { if (!cancelled) setIsLoading(false); });
+    return () => { cancelled = true; };
+  }, [habit.id, weekStart]);
 
-type HabitCardProps = {
-	habit: Habit
-}
+  async function handleToggle(date: string) {
+    try {
+      setError(null);
+      setWeekData(await toggleHabit(habit.id, date));
+    } catch {
+      setError("Unable to update this day.");
+    }
+  }
 
-function HabitCard({ habit }: HabitCardProps){
-	const { deleteHabit, toggleHabit } = useHabits()
-	const [weekOffset, setWeekOffset] = useState(0)
+  async function handleDelete() {
+    try { await deleteHabit(habit.id); }
+    catch { setError("Unable to delete this habit."); }
+  }
 
-	const streak = getStreak(habit.completions)
-	const visibleDates = getVisibleDates(weekOffset)
-
-	return (
-	<div className="card">
-		<div className="habit-card-header">
-			<div className="habit-info">
-				<span className="habit-name">{habit.name}</span>
-				{streak !== 0 && ( // if streak is 0, returns false making the span not render
-					<span className="streak">🔥{streak}</span>				
-				)}
-			</div>
-      <div className="delete-button-container">
-        <Button 
-          onClick={() => deleteHabit(habit.id)} 
-          variant="ghost-destructive" 
-        >
-          Delete
-        </Button>
+  return <div className="card">
+    <div className="habit-card-header">
+      <div className="habit-info">
+        <span className="habit-name">{weekData.name}</span>
+        {weekData.streak !== 0 && <span className="streak">🔥{weekData.streak}</span>}
       </div>
-		</div>
-		<div className="week-row">
-			<Button
-				onClick={() => setWeekOffset(w => w - 1)}
-				variant="primary"
-				className="nav-button"
-			>
-				{"<"}
-			</Button>
-			<div className="day-list">
-				{visibleDates.map(date => (
-					<Button 
-						className="day-button"
-						key={date.toISOString()} 
-						disabled={isFuture(date)}
-						onClick={() => toggleHabit(habit.id, date)}
-						variant={
-							habit.completions.some(d => isSameDay(date, d))
-								? "primary"
-								: "secondary"
-						}
-					>
-						<span className="day-name">{format(date, "EEE")}</span>
-						<span>{format(date, "d")}</span>
-					</Button>
-				))}
-			</div>
-			<Button
-				onClick={() => setWeekOffset(w => w + 1)}
-				variant="primary"
-				className="nav-button"
-			>
-				{">"}
-			</Button>
-		</div>
-	</div>
-	)
+      <div className="delete-button-container"><Button onClick={() => void handleDelete()} variant="ghost-destructive">Delete</Button></div>
+    </div>
+    <div className="week-navigation">
+      <Button disabled={!canGoPrevious || isLoading} onClick={() => setWeekStart(value => subWeeks(value, 1))} variant="primary" className="nav-button">Previous Week</Button>
+      <span className="week-range">{format(weekStart, "MMM d")} – {format(addDays(weekStart, 6), "MMM d")}</span>
+      <Button disabled={!canGoNext || isLoading} onClick={() => setWeekStart(value => addWeeks(value, 1))} variant="primary" className="nav-button">Next Week</Button>
+    </div>
+    <div className="week-row"><div className="day-list">
+      {weekData.days.map(day => {
+        const date = parseISO(day.date);
+        const beforeHabitCreation = isBefore(date, parseISO(weekData.createdAt));
+        return <Button className="day-button" key={day.date} disabled={isLoading || day.isFuture || beforeHabitCreation}
+          onClick={() => void handleToggle(day.date)} variant={day.completed ? "primary" : "secondary"}>
+          <span className="day-name">{format(date, "EEE")}</span><span>{format(date, "d")}</span>
+        </Button>;
+      })}
+    </div></div>
+    {error && <p className="habit-card-error">{error}</p>}
+  </div>;
 }
 
 export default HabitCard;

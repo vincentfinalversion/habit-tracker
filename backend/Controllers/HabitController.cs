@@ -59,6 +59,31 @@ public class HabitsController : ControllerBase
         return Ok(results);
     }
 
+    [HttpGet("{habitId}/week")]
+    public async Task<IActionResult> GetWeek(int habitId, [FromQuery] DateOnly startDate)
+    {
+        var today = DateOnly.FromDateTime(DateTime.UtcNow);
+        var currentWeekStart = StartOfWeek(today);
+
+        if (startDate.DayOfWeek != DayOfWeek.Monday)
+            return BadRequest(new { message = "startDate must be a Monday." });
+
+        if (startDate > currentWeekStart)
+            return BadRequest(new { message = "Cannot request a future week." });
+
+        var habit = await _db.Habits
+            .FirstOrDefaultAsync(h => h.Id == habitId && h.UserId == CurrentUserId);
+
+        if (habit is null)
+            return NotFound(new { message = "Habit not found." });
+
+        var habitWeekStart = StartOfWeek(DateOnly.FromDateTime(habit.CreatedAt));
+        if (startDate < habitWeekStart)
+            return BadRequest(new { message = "Cannot request a week before the habit was created." });
+
+        return Ok(await BuildHabitCardAsync(habit, today, startDate));
+    }
+
     private async Task<HabitCardResponse> BuildHabitCardAsync(Habit habit, DateOnly today, DateOnly weekStart)
     {
         var weekEnd = weekStart.AddDays(6);
@@ -84,6 +109,7 @@ public class HabitsController : ControllerBase
         {
             Id = habit.Id,
             Name = habit.Name,
+            CreatedAt = DateOnly.FromDateTime(habit.CreatedAt),
             Streak = await CalculateStreakAsync(habit.Id, today),
             Days = days
         };
@@ -130,6 +156,9 @@ public class HabitsController : ControllerBase
 
         if (habit is null)
             return NotFound(new { message = "Habit not found." });
+
+        if (request.Date < DateOnly.FromDateTime(habit.CreatedAt))
+            return BadRequest(new { message = "Cannot update a date before the habit was created." });
 
         var existing = await _db.HabitCompletions
             .FirstOrDefaultAsync(hc => hc.HabitId == habitId && hc.Date == request.Date);

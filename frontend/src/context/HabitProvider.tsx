@@ -1,12 +1,12 @@
-import { isSameDay } from "date-fns";
-import { createContext, useContext, type ReactNode } from "react";
-import useLocalStorage from "../hooks/useLocalStorage";
+import { createContext, useContext, useEffect, useState, type ReactNode } from "react";
+import { deleteHabitRequest, getHabits, toggleHabitCompletion, type Habit } from "../api/habitsApi";
 
 type Context = {
-  habits: Habit[]
-	addHabit: (name: string) => void
-	deleteHabit: (id: string) => void
-	toggleHabit: (id: string, date: Date) => void
+  habits: Habit[];
+  isLoading: boolean;
+  error: string | null;
+	deleteHabit: (id: number) => Promise<void>;
+	toggleHabit: (id: number, date: string) => Promise<Habit>;
 }
 
 type HabitProviderProps = {
@@ -15,37 +15,41 @@ type HabitProviderProps = {
 
 export const HabitContext = createContext<null | Context>(null) 
 
-export type Habit = { id: string; name: string; completions: Date[]}
+export type { Habit } from "../api/habitsApi";
 
 function HabitProvider({children}: HabitProviderProps) {
-  const [habits, setHabits] = useLocalStorage<Habit[]>("Habits", [])
-  
-  function addHabit(name: string){
-    setHabits(curr => [
-      ...curr, 
-      { id: crypto.randomUUID(), name, completions: [] },])
+  const [habits, setHabits] = useState<Habit[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+
+  useEffect(() => {
+    const token = localStorage.getItem("authToken");
+    if (!token) {
+      setIsLoading(false);
+      return;
+    }
+
+    void getHabits(token)
+      .then(setHabits)
+      .catch(() => setError("Unable to load habits."))
+      .finally(() => setIsLoading(false));
+  }, []);
+
+  async function deleteHabit(id: number) {
+    const token = localStorage.getItem("authToken");
+    if (!token) throw new Error("You are not authenticated.");
+    await deleteHabitRequest(token, id);
+    setHabits(current => current.filter(habit => habit.id !== id));
   }
 
-  function deleteHabit(id: string){
-    setHabits(curr =>  curr.filter(h => h.id !== id))
-  }
-
-  function toggleHabit(id: string, date: Date){
-    setHabits(curr =>
-      curr.map(h => {
-        if (h.id !== id) return h
-
-        const alreadyDone = h.completions.some(c => isSameDay(c, date))
-        const completions = alreadyDone 
-          ? h.completions.filter(c => !isSameDay(c, date))
-          : [...h.completions, date]
-        return { ...h, completions }
-      })
-    )
+  async function toggleHabit(id: number, date: string) {
+    const token = localStorage.getItem("authToken");
+    if (!token) throw new Error("You are not authenticated.");
+    return toggleHabitCompletion(token, id, date);
   }
 
 	return (
-		<HabitContext value={{ habits, addHabit, deleteHabit, toggleHabit }}>
+		<HabitContext value={{ habits, isLoading, error, deleteHabit, toggleHabit }}>
 			{children}
 		</HabitContext>
 	)

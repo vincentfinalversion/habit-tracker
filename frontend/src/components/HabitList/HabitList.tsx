@@ -3,7 +3,9 @@ import HabitCard from "../HabitCard/HabitCard.tsx";
 import "./HabitList.css";
 
 function HabitList(){
-	const { habits } = useHabits()
+	const { habits, isLoading, error } = useHabits()
+	if (isLoading) return <p className="empty">Loading habits...</p>
+	if (error) return <p className="empty">{error}</p>
 	if (habits.length === 0) {
     return <p className="empty">
       No habits yet. Add one above to get started!
