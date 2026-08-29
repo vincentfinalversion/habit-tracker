@@ -1,0 +1,9 @@
+.dashboard-page{
+    border: 3px solid var(--color-text-border);
+    box-shadow: -3px 3px 0 var(--color-text-border);
+    display: flex; 
+    flex-direction: column;
+    box-sizing: border-box;
+    width: min(45rem, calc(100vw - 2rem));
+    height: 80%;
+}
