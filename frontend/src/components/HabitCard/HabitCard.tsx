@@ -54,12 +54,33 @@ function HabitCard({ habit }: HabitCardProps) {
         <span className="habit-name">{weekData.name}</span>
         {weekData.streak !== 0 && <span className="streak">🔥{weekData.streak}</span>}
       </div>
-      <div className="delete-button-container"><Button onClick={() => void handleDelete()} variant="ghost-destructive">Delete</Button></div>
+      <div className="delete-button-container">
+        <Button 
+          onClick={() => void handleDelete()} 
+          variant="ghost-destructive"
+        >
+          Delete
+        </Button></div>
     </div>
     <div className="week-navigation">
-      <Button disabled={!canGoPrevious || isLoading} onClick={() => setWeekStart(value => subWeeks(value, 1))} variant="primary" className="nav-button">Previous Week</Button>
-      <span className="week-range">{format(weekStart, "MMM d")} – {format(addDays(weekStart, 6), "MMM d")}</span>
-      <Button disabled={!canGoNext || isLoading} onClick={() => setWeekStart(value => addWeeks(value, 1))} variant="primary" className="nav-button">Next Week</Button>
+      <Button 
+        disabled={!canGoPrevious || isLoading} onClick={() => setWeekStart(value => subWeeks(value, 1))} 
+        variant="primary" 
+        className="nav-button"
+      >
+        {"<"}
+      </Button>
+      <span className="week-range">
+        {format(weekStart, "MMM d")} – {format(addDays(weekStart, 6), "MMM d")}
+      </span>
+      <Button 
+        disabled={!canGoNext || isLoading} 
+        onClick={() => setWeekStart(value => addWeeks(value, 1))} 
+        variant="primary" 
+        className="nav-button"
+      >
+        {">"}
+      </Button>
     </div>
     <div className="week-row"><div className="day-list">
       {weekData.days.map(day => {
