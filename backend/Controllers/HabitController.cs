@@ -26,9 +26,20 @@ public class HabitsController : ControllerBase
     [HttpPost]
     public async Task<IActionResult> Create(CreateHabitRequest request)
     {
+        var name = request.Name.Trim();
+
+        if (string.IsNullOrWhiteSpace(name))
+            return BadRequest(new { message = "Habit name is required." });
+
+        var alreadyExists = await _db.Habits
+            .AnyAsync(h => h.UserId == CurrentUserId && h.Name == name);
+
+        if (alreadyExists)
+            return Conflict(new { message = "A habit with this name already exists." });
+
         var habit = new Habit
         {
-            Name = request.Name,
+            Name = name,
             UserId = CurrentUserId
         };
 

@@ -36,6 +36,10 @@ public class AppDbContext : DbContext
             .WithMany()
             .HasForeignKey(h => h.UserId)
             .OnDelete(DeleteBehavior.Cascade);
+
+        modelBuilder.Entity<Habit>()
+            .HasIndex(h => new { h.UserId, h.Name })
+            .IsUnique();
         
         modelBuilder.Entity<HabitCompletion>()
             .HasOne(hc => hc.Habit)

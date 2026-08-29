@@ -29,12 +29,23 @@ async function request<T>(path: string, token: string, init?: RequestInit): Prom
     },
   });
 
-  if (!response.ok) throw new Error("Unable to complete the habit request.");
+  if (!response.ok) {
+    const body = await response.json().catch(() => null);
+    throw new Error(body?.message ?? "Unable to complete the habit request.");
+  }
   return response.status === 204 ? undefined as T : response.json();
 }
 
 export function getHabits(token: string): Promise<Habit[]> {
   return request<Habit[]>("/api/habits", token);
+}
+
+export function createHabit(token: string, name: string): Promise<Habit> {
+  return request<Habit>("/api/habits", token, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ name }),
+  });
 }
 
 export function getHabitWeek(token: string, habitId: number, startDate: string): Promise<Habit> {
