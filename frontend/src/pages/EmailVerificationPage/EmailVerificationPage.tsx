@@ -1,6 +1,6 @@
 import { useEffect, useState, type SubmitEvent } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
-import SingleFieldForm from '../../components/HabitForm/SingleFieldForm';
+import SingleFieldForm from '../../components/SingleFieldForm/SingleFieldForm';
 import { verifyEmail } from '../../api/registerApi';
 import './EmailVerificationPage.css';
 
