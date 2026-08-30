@@ -1,6 +1,6 @@
 .card {
 	border: 2px solid var(--color-text-border);
-    box-shadow: -1px 1px 0 var(--color-text-border);
+    box-shadow: -2px 2px 0 var(--color-text-border);
 	background-color: var(--color-background);
 	padding: 1rem;
 	display: flex;

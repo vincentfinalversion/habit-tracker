@@ -36,3 +36,9 @@
     align-items: center;
     justify-content: end;
 }
+
+@media (max-width: 768px) {
+    .header-title-container  {
+        font-size: var(--font-size-base);
+    }
+}
