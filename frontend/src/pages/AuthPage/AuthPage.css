@@ -61,6 +61,7 @@
     box-shadow: -2px 2px 0 var(--color-text-border);
     pointer-events: none;
     z-index: 1;
+    box-sizing: border-box;
     transform: translateX(0);
     transition:
         transform 200ms ease,
