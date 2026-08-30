@@ -2,13 +2,18 @@ import { useState } from 'react';
 import Button from '../../components/Button/Button.tsx';
 import LoginForm from '../../components/LoginForm/LoginForm.tsx';
 import RegisterForm from '../../components/RegisterForm/RegisterForm.tsx';
+import DemoNoticeModal from '../../components/DemoNoticeModal/DemoNoticeModal.tsx';
 import './AuthPage.css';
 
 function AuthPage() {
   const [activeTab, setActiveTab] = useState<'login' | 'register'>('login');
+  const [showDemoNotice, setShowDemoNotice] = useState(true);
 
   return (
     <div className="auth-page">
+      {showDemoNotice && (
+        <DemoNoticeModal onClose={() => setShowDemoNotice(false)} />
+      )}
       <div className="auth-info-container">
         <h2 className="auth-info-title">
           myHabits

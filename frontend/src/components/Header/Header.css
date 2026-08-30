@@ -16,7 +16,7 @@
     flex:1;
     align-items: center;
     justify-content: start;
-	font-size: var(--font-size-2xl);
+	font-size: var(--font-size-base);
 	font-weight: 900;
 }
 
@@ -35,10 +35,4 @@
     flex:1;
     align-items: center;
     justify-content: end;
-}
-
-@media (max-width: 768px) {
-    .header-title-container  {
-        font-size: var(--font-size-base);
-    }
 }
