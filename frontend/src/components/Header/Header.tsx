@@ -1,12 +1,14 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { getDailySummary, type DailySummary } from "../../api/habitsApi";
+import { useHabits } from "../../context/HabitProvider.tsx";
 import Button from "../Button/Button";
 import "./Header.css";
 
 function Header() {
 	const [summary, setSummary] = useState<DailySummary | null>(null);
 	const navigate = useNavigate();
+	const { summaryVersion } = useHabits();
 
 	useEffect(() => {
 		const token = localStorage.getItem("authToken");
@@ -15,7 +17,7 @@ function Header() {
 		void getDailySummary(token)
 			.then(setSummary)
 			.catch(() => setSummary(null));
-	}, []);
+	}, [summaryVersion]);
 
 	function handleLogout() {
 		localStorage.removeItem("authToken");

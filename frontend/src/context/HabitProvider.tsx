@@ -5,6 +5,7 @@ type Context = {
   habits: Habit[];
   isLoading: boolean;
   error: string | null;
+  summaryVersion: number;
 	deleteHabit: (id: number) => Promise<void>;
 	toggleHabit: (id: number, date: string) => Promise<Habit>;
 	createHabit: (name: string) => Promise<Habit>;
@@ -22,6 +23,7 @@ function HabitProvider({children}: HabitProviderProps) {
   const [habits, setHabits] = useState<Habit[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [summaryVersion, setSummaryVersion] = useState(0);
 
   useEffect(() => {
     const token = localStorage.getItem("authToken");
@@ -36,17 +38,19 @@ function HabitProvider({children}: HabitProviderProps) {
       .finally(() => setIsLoading(false));
   }, []);
 
+  async function toggleHabit(id: number, date: string) {
+    const token = localStorage.getItem("authToken");
+    if (!token) throw new Error("You are not authenticated.");
+    const result = await toggleHabitCompletion(token, id, date);
+    setSummaryVersion(v => v + 1);
+    return result;
+  }
+
   async function deleteHabit(id: number) {
     const token = localStorage.getItem("authToken");
     if (!token) throw new Error("You are not authenticated.");
     await deleteHabitRequest(token, id);
     setHabits(current => current.filter(habit => habit.id !== id));
-  }
-
-  async function toggleHabit(id: number, date: string) {
-    const token = localStorage.getItem("authToken");
-    if (!token) throw new Error("You are not authenticated.");
-    return toggleHabitCompletion(token, id, date);
   }
 
   async function createHabit(name: string) {
@@ -65,11 +69,22 @@ function HabitProvider({children}: HabitProviderProps) {
     return habit;
   }
 
-	return (
-		<HabitContext value={{ habits, isLoading, error, deleteHabit, toggleHabit, createHabit }}>
-			{children}
-		</HabitContext>
-	)
+  return (
+    <HabitContext 
+      value={
+        { habits, 
+          isLoading, 
+          error, 
+          summaryVersion, 
+          deleteHabit, 
+          toggleHabit, 
+          createHabit 
+        }
+      }
+    >
+      {children}
+    </HabitContext>
+  )
 }
 
 export default HabitProvider;
