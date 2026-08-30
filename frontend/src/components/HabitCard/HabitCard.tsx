@@ -10,7 +10,7 @@ type HabitCardProps = { habit: Habit };
 
 function HabitCard({ habit }: HabitCardProps) {
   const { deleteHabit, toggleHabit } = useHabits();
-  const currentWeekStart = useMemo(() => startOfWeek(new Date(), mondayOptions), []);
+  const currentWeekStart = useMemo(() => startOfWeek(getUtcNow(), mondayOptions), []);
   const [weekStart, setWeekStart] = useState(currentWeekStart);
   const [weekData, setWeekData] = useState(habit);
   const [isLoading, setIsLoading] = useState(false);
@@ -46,6 +46,11 @@ function HabitCard({ habit }: HabitCardProps) {
   async function handleDelete() {
     try { await deleteHabit(habit.id); }
     catch { setError("Unable to delete this habit."); }
+  }
+
+  function getUtcNow() {
+    const now = new Date();
+    return new Date(now.getTime() + now.getTimezoneOffset() * 60000);
   }
 
   return <div className="card">
