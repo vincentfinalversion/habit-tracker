@@ -52,7 +52,7 @@ function HabitCard({ habit }: HabitCardProps) {
     <div className="habit-card-header">
       <div className="habit-info">
         <span className="habit-name">{weekData.name}</span>
-        {weekData.streak !== 0 && <span className="streak">🔥{weekData.streak}</span>}
+        {weekData.streak >= 2 && <span className="streak">🔥{weekData.streak}</span>}
       </div>
       <div className="delete-button-container">
         <Button 
