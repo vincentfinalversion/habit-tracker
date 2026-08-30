@@ -12,6 +12,8 @@
     overflow-y: auto;
     padding: 1rem;
     margin: 0.15rem;
+    scrollbar-gutter: stable;
+    box-sizing: border-box;
 }
 
 .app-container::-webkit-scrollbar {
@@ -28,4 +30,12 @@
 
 .app-container::-webkit-scrollbar-thumb:hover {
     background: var(--color-text-border);
+}
+
+@media (max-width: 480px) {
+    .app-container{
+        gap: 0.5rem;
+        margin: normal;
+        padding: 0.5rem;
+    }
 }
