@@ -6,7 +6,7 @@ A full-stack habit tracking web app that helps build consistency by visualizing 
 
 ## Demo
 
-[▶️ Watch the Demo](./assets/myHabits-demo.mp4)
+[▶️ Watch the Demo](https://drive.google.com/file/d/1p62z7bHLUtvJOI_SBGVtrLmfJP03IymG/view?usp=sharing)
 
 ## What it does
 
